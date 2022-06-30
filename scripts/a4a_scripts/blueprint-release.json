@@ -1,0 +1,350 @@
+{
+    "targets": {
+      "input": "International.apk",
+      "output": "output"
+    },
+    "globalConfiguration":
+    {
+      "seed": 12345,
+      "charsetType":"ascii",
+      "enableReflectionDebugging": true,
+
+      "verbosityLevel": {
+        "global": 0
+      },
+      "appAware": {
+      "disable": true,
+      "debug": false,
+      "endpointURL": "https://endpoint.example.com",
+      "applicationToken": "sample12-3456-7890-1234-567890123456",
+      "uaiUserDefaultsKey": "SomeKey",
+      "heartbeat" : {
+          "interval" : 86400,
+          "initialDelay" : 10
+      }
+      },
+      "keepSignatures": "keepsignatures.txt"
+    },
+    "guardConfiguration": {
+      "renaming": {
+      "disable": true,
+      "renameInNativeLibraries" : false,
+      "renameInResources": false,
+      "exclude": [
+        {
+            "type": "class",
+            "name": "*"
+        }
+      ],
+      "include": [
+        {
+          "type" : "class",
+          "name" : "sanint.app*"
+        }
+      ] 
+      },
+    "controlFlowFlattening": {
+      "disable": false,
+      "safeMode": true    
+    },
+    "staticMemberShuffling": {
+      "disable": false
+    },
+    "inlining": {
+      "disable": false
+    },
+    "stringEncryption": {
+      "disable": false
+    },
+    "operatorRemoval": {
+      "disable": false
+    },
+    "debugInfoStrip": {
+      "disable": false
+    },
+    "logStrip": {
+      "disable": false
+    },
+    "literalHiding": {
+     "disable": false
+    }, 
+    "debuggerDetection": [
+      {
+        "disable": false,
+        "debug": false,
+        "name": "L1_Debug_Detection_Guard_1",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "doNothing"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      },
+      {
+        "disable": false,
+        "debug": false,
+        "name": "L1_Debug_Detection_Guard_2",
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "androidx.appcompat.app.c.onCreate"
+          }
+        ],
+        "name" : "Debugger Detection Guard",
+        "tamperAction" : 
+        {
+          "type" : "fail"
+        },
+        "nonTamperAction" : 
+        {
+          "type" : "doNothing"
+        }
+      }
+    ],
+   "rootDetection": [
+      {
+        "disable": false,
+        "debug": true,
+        "name": "Root Detection Guard",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "doNothing"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      }
+    ],
+   "emulatorDetection" : 
+    [
+      {
+        "disable": false,
+        "debug": false,
+        "name": "L1_Java_Emulator_Detection_Guard_1",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "doNothing"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      },
+      {
+        "disable": false,
+        "debug": false,
+        "name": "L1_Java_Emulator_Detection_Guard_2",
+        "invocationLocations" : 
+        [
+          {
+            "type" : "method",
+            "name" : "androidx.appcompat.app.c.onCreate"
+          }
+        ],
+        "name" : "Emulator Detection Guard",
+        "tamperAction" : {
+            "type": "fail"
+        },
+        "nonTamperAction" : {
+            "type" : "doNothing"
+        }
+      }
+    ],
+    "resourceVerification": [
+      {
+        "disable": false,
+        "debug": false,
+        "name": "Resource Verification Guard",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "doNothing"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        },
+        "files": [
+          "resources.arsc",
+          "AndroidManifest.xml"
+        ]
+      }
+    ],
+   "checksum" :
+      [
+        {
+          "disable": false,
+          "debug": false,
+          "name": "Checksum_Guard_1",
+          "invocationLocations": [
+            {
+              "type": "auto"
+            }
+          ],
+          "tamperAction": {
+            "type": "doNothing"
+          },
+          "nonTamperAction": {
+            "type": "doNothing"
+          }
+        },
+        {
+          "disable": false,
+          "debug": false,
+          "name" : "Checksum_Guard_2",
+          "invocationLocations": [
+          {
+              "type" : "method",
+              "name" : "androidx.appcompat.app.c.onCreate"
+          }
+          ],
+          "tamperAction" : {
+            "type": "fail"
+          },
+          "nonTamperAction" : {
+            "type" : "doNothing"
+          }
+        },
+        {
+          "disable": false,
+          "debug": false,
+          "name" : "Checksum_Guard_3",
+          "invocationLocations": [
+            {
+              "type" : "method",
+              "name" : "androidx.appcompat.app.c.onPostCreate"
+            }          
+          ],
+          "tamperAction" : {
+            "type": "fail"
+          },
+          "nonTamperAction" : {
+            "type" : "doNothing"
+          }
+        }
+      ],
+      "classEncryption": {
+        "disable": false,
+        "debug": false,
+        "targets": [
+          "com.sanint.app.R.*", 
+        ]
+      },
+      "dynamicInstrumentationDetection":
+      [
+        {
+          "name" : "Dynamic instrumentation detection instance 1",
+          "disable": false,
+          "debug": false,
+          "frida" : {
+          },
+          "invocationLocations": [
+            {
+              "type": "method",
+              "name": "androidx.appcompat.app.c.onCreate"
+            }
+          ],
+          "tamperAction": {
+            "type": "fail"
+          },
+          "nonTamperAction": {
+            "type": "doNothing"
+          }
+        }
+      ],
+      "virtualizationDetection": [
+      {
+        "name": "Virtualization Detection Guard",
+        "disable": false,
+        "debug": false,
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "doNothing"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      }
+    ],
+    "hookDetection": [
+      {
+        "name": "Hook detection instance 1",
+        "disable": false,
+        "debug": false,
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "doNothing"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      },
+      {
+        "disable": false,
+        "debug": false,
+        "name": "Hook detection instance 2",
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "androidx.appcompat.app.c.onCreate"
+            }
+        ],
+        "tamperAction": {
+          "type": "fail"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"  
+        }
+      }
+    ],  
+    "signatureCheck": [
+      {
+        "disable": true,
+        "debug": false,
+        "name": "Signature check instance 1",
+        "signaturePublicKeySHA256":[ "0f451bdcdd3207d970649f5ca4c9b1869c340efe27fdc146fd7cb7c7c58b5be8"],
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "androidx.appcompat.app.c.onCreate"
+          }
+        ],
+        "tamperAction": {
+             "type": "fail"
+        },
+        "nonTamperAction": {
+             "type": "doNothing"
+        }
+      }
+    ],
+     "resourceEncryption": {
+        "disable": false,
+        "debug": false,
+        "files": [
+          "assets*"
+      ]
+    }
+  }
+}

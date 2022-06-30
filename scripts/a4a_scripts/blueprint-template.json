@@ -1,0 +1,479 @@
+{
+  "globalConfiguration": {
+    "seed": 12345,
+    //These classes will be excluded from all the guards
+    // "exclude": [
+    //   {
+    //     "type": "class",
+    //     "name": "*"
+    //   }
+    // ],
+    //Replace this with the relevant portion(s) of the class hierarchy to be protected
+    // "include": [
+    //   {
+    //     "type": "class",
+    //     "name": "com.snatik*"
+    //   }
+    // ],
+    "verbosityLevel": {
+      "global": 1
+    },
+    "threatAnalytics": {
+      "disable": true,
+      //Follow analytics documentation to fill these fields
+      "debug": true,
+      "endpointURL": "https://endpoint.example.com",
+      "applicationToken": "sample12-3456-7890-1234-567890123456",
+      "uaiUserDefaultsKey": "SomeKey",
+      "checkpoints": {
+        "startupCheckpoint": {
+          "invocationLocation":  "com.snatik.matches.MainActivity.onCreate"
+    },
+        "gameStateCheckpoint": {
+          "invocationLocation":  "com.snatik.matches.ui.PopupWonView.setGameState"
+        }
+      },
+      "heartbeat":  {
+        "disable" : true,
+        "interval" : 86400,
+        "initialDelay" : 5
+      }
+    },
+    "charsetType": "debug",
+    // renaming, controlFlowFlattening, inlining, stringEncryption suffer from reflection. Singatures of methods defined in proguard.txt file will be untouched
+    "keepSignatures": "keepsignatures.txt"
+  },
+  "guardConfiguration": {
+    // Code obfuscation guards
+
+    // Following 4 guards suffer from reflection calls, however in this particular application
+    // all the reflection calls are automatically resolved so there's no need to exclude anything
+    "renaming": {
+      "disable": false,
+      "renameInResources": true,
+      "renameInNativeLibraries": false
+    },
+    "controlFlowFlattening": {
+      "disable": false,
+      "safeMode": true
+    },
+    "staticMemberShuffling": {
+      "disable": false
+    },
+    "inlining": {
+      "disable": false,
+      "size": "small"
+    },
+    "stringEncryption": {
+      "disable": false
+    },
+    "annotationEncryption": {
+      "disable": true,
+      "debug": true,
+      "ranges" : {
+         "exclude": [ {
+            "type":"class",
+            "name":"com.class.*"
+            }
+         ]
+    },
+      "targets" : {
+         "exclude": [ {
+            "type" : "class",
+            "name":"kotlin.*"
+          }
+        ],
+         "include": [ {
+            "type" : "class",
+            "name":"kotlin.Metadata"
+          }
+        ]
+      }
+    },
+    "operatorRemoval": {
+      "disable": false
+    },
+    "debugInfoStrip": {
+      "disable": false
+    },
+    "deadCodeInjection" : 
+    {
+      // Dead code injection guard requires targets. As we don't care about code bloat in
+      // this example - we include all the methods
+      "disable" : true,
+      "targets" : 
+      [
+        {
+          "type": "method",
+          "name": "com.snatik.matches.common.Music.*"
+        },
+        {
+          "type": "method",
+          "name": "com.snatik.matches.GameApplication.*"
+        },
+        {
+          "type": "method",
+          "name": "com.snatik.matches.MainActivity.*"
+        },
+        {
+          "type": "method",
+          "name": "com.snatik.matches.ui.PopupWonView.*"
+        }
+      ]
+    },
+    "callHiding": {
+      "disable": true,
+      "targets": [
+        {
+          // Additional protection for score changing methods
+          "type": "method",
+          "name": "com.snatik.matches.ui.PopupWonView.setGameState"
+        }
+      ]
+    },
+    // All the runtime guards might have multiple instances
+    "debuggerDetection": [
+      {
+        "disable": true,
+        "debug": true,
+        "name": "Debugger detection instance 1",
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "com.snatik.matches.*.onCreate"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      },
+      {
+        "disable": false,
+        "debug": true,
+        "name": "Debugger detection instance 2",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail",
+          "immediateAction" : false
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      }
+    ],
+    "rootDetection": [
+      {
+        "disable": true,
+        //Debug mode for runtime guards allows them to print debug messages into logcat
+        "debug": true,
+        "name": "Root detection instance 1",
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "com.snatik.matches.ui.PopupWonView.setGameState"
+          }
+        ],
+        "tamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.rootDetectionTamperAction"
+        },
+        "nonTamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.rootDetectionNonTamperAction"
+        }
+      },
+      {
+        "disable": false,
+        "debug": true,
+        "name": "Root detection instance 2",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail",
+          "immediateAction" : false
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      }
+    ],
+    "hookDetection": [
+      {
+        "disable": true,
+        "debug": true,
+        "executeOnBackgroundThread": true,
+        "name": "Hook detection instance 1",
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "com.snatik.matches.events.ui.ThemeSelectedEvent.fire"
+          }
+        ],
+        "tamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.hookDetectionTamperAction"
+        },
+        "nonTamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.hookDetectionNonTamperAction"
+        }
+      },
+      {
+        "disable": false,
+        "debug": true,
+        "name": "Hook detection instance 2",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail",
+          "immediateAction" : false
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      }
+
+    ],
+    "signatureCheck": [
+      {
+        "disable": true,
+        "debug": true,
+        "name": "Signature check instance 1",
+        //Signature could be extracted from signed apk, keystore file or google play console
+        "signaturePublicKeySHA256": "6654a6d1e55776c596f788aae85c15c22d268f7c5696c7397bc52e9393fe793f",
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "com.snatik.matches.MainActivity.onCreate"
+          }
+        ],
+        "tamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.signatureCheckTamperAction"
+        },
+        "nonTamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.signatureCheckNonTamperAction"
+        }
+      },
+      {
+        "disable": true,
+        "debug": true,
+        "name": "Signature check instance 2",
+        "signaturePublicKeySHA256": "6654a6d1e55776c596f788aae85c15c22d268f7c5696c7397bc52e9393fe793f",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      }
+    ],
+    "emulatorDetection": [
+      {
+        "disable": true,
+        "debug": true,
+        "executeOnBackgroundThread" : true,
+        "name": "Emulator detection instance 1",
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "com.snatik.matches.events.ui.StartEvent.fire"
+          }
+        ],
+        "tamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.emulatorDetectionTamperAction",
+          "immediateAction" : false
+        },
+        "nonTamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.emulatorDetectionNonTamperAction"
+        }
+      },
+      {
+        "disable": false,
+        "debug": true,
+        "name": "Emulator detection instance 2",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      }
+    ],
+    "resourceEncryption": {
+      "disable": true,
+      "debug": true,
+      "files": [
+        "assets/textfile.txt"
+      ]
+    },
+    "logStrip": {
+      "disable": false
+    },
+    "checksum" : [
+    {
+      "disable": true,
+      "debug" : true,
+      "executeOnBackgroundThread" : true,
+      "name" : "checksum1",
+      "invocationLocations": [
+        {
+          "type" : "method",
+          "name" : "com.snatik.matches.MainActivity.onCreate"
+        }
+      ],
+      "tamperAction" : {
+        "immediateAction" : false,
+        "type": "method",
+        "name": "com.snatik.matches.TamperAction.checksumTamperAction"
+      },
+      "nonTamperAction" : {
+        "immediateAction" : true,
+        "type": "method",
+        "name": "com.snatik.matches.TamperAction.checksumNonTamperAction"
+      }
+    },
+    {
+        "disable": false,
+        "debug": true,
+        "executeOnBackgroundThread" : true,
+        "name": "checksum2",
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+    }
+  ],
+    "dynamicInstrumentationDetection": [
+      {
+        "name" : "Dynamic instrumentation detection instance 1",
+        "disable": true,
+        "debug" : true,
+        "executeOnBackgroundThread": true,
+        "frida" : { },
+        "gameGuardian" : { },
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "com.snatik.matches.events.ui.DifficultySelectedEvent.fire"
+          }
+        ],
+        "tamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.dynamicInstrumentationDetectionTamperAction"
+        },
+        "nonTamperAction": {
+          "type": "method",
+          "name": "com.snatik.matches.TamperAction.dynamicInstrumentationDetectionNonTamperAction"
+        }
+      },
+      {
+        "name" : "Dynamic instrumentation detection instance 2",
+        "disable": false,
+        "debug" : true,
+        "executeOnBackgroundThread": true,
+        "frida" : { },
+        "gameGuardian" : { },
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        }
+      }
+    ],
+    "resourceVerification": [
+      {
+        "name": "Resource verification instance 1",
+        "disable": true,
+        "debug": true,
+        "executeOnBackgroundThread": true,
+        "invocationLocations": [
+          {
+            "type": "method",
+            "name": "com.snatik.matches.utils.FontLoader.loadFonts"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail",
+          "immediateAction" : false
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        },
+        "files": [
+          "assets/fonts/grobold.ttf",
+          "res/raw/"
+        ]
+      },
+      {
+        "name": "Resource verification instance 2",
+        "disable": false,
+        "debug": true,
+        "executeOnBackgroundThread" : true,
+        "invocationLocations": [
+          {
+            "type": "auto"
+          }
+        ],
+        "tamperAction": {
+          "type": "fail"
+        },
+        "nonTamperAction": {
+          "type": "doNothing"
+        },
+        "files": [
+          "AndroidManifest.xml"
+        ]
+      }
+    ],
+    "classEncryption": {
+      "disable": true,
+      "debug": true,
+      "targets": [
+        // MainActivity and inner classes
+        "com.snatik.matches.MainActivity*",
+        // Classes in package
+        "com.snatik.matches.engine.*"
+      ]
+    }
+  }
+}

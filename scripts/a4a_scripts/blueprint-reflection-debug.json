@@ -1,0 +1,19 @@
+{
+  "globalConfiguration": {
+
+    //The seed value should change with each release to ensure uniqueness
+    "seed": 1567095808,
+
+    //Keep at 1 unless troubleshooting - increasing the value will also increase the protection time and memory needed
+    "verbosityLevel": {
+      "global": 1
+    },
+
+    "enableReflectionDebugging": true, //Should remain false for all releases
+    "charsetType": "debug", //Recommended setting is readableUtf8; debug shouldn't be used for production releases.
+
+    //References the ProGuard-formatted rules file to exclude class/method/fields signature modification from renaming, static member shuffling, inlining, and control flow flattening.
+    //Use the reflection debugging mode to identify additional entries as the app evolves.
+    "keepSignatures": "keepsignatures.txt"
+  }
+}
